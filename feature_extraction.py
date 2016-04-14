@@ -37,16 +37,19 @@ def extract_features(v_data):
 	data_features = data_features.drop(['search_term','product_title','product_description', 'Unnamed: 0'],axis=1)
 	return data_features
 	
+def main():
+	dataset = pd.read_csv("data.csv")
+	# not needed if already done: removing NA from Dataset
+	dataset = dataset.dropna()
+	vectorized_dataset = vectorize(dataset)
+	featurized_dataset = extract_features(vectorized_dataset)
 
-dataset = pd.read_csv("data.csv")
-# not needed if already done: removing NA from Dataset
-dataset = dataset.dropna()
-vectorized_dataset = vectorize(dataset)
-featurized_dataset = extract_features(vectorized_dataset)
+	index = np.random.rand(len(dataset)) < 0.7
+	train = featurized_dataset[index]
+	test = featurized_dataset[~index]
 
-index = np.random.rand(len(dataset)) < 0.7
-train = featurized_dataset[index]
-test = featurized_dataset[~index]
-
-train.to_csv('data_train.csv',index=False)
-test.to_csv('data_test.csv',index=False)
+	train.to_csv('data_train.csv',index=False)
+	test.to_csv('data_test.csv',index=False)
+	
+if __name__ == "__main__":
+    main()
