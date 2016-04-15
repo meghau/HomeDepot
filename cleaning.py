@@ -2,9 +2,11 @@ import pandas
 from nltk import*
 from nltk.corpus import wordnet
 import re
-#import text2num
+import nltk.data
+import nltk.tag
 
 #download("stopwords")
+
 def word_tag(tag):
 	if tag.startswith('J'):
 		return wordnet.ADJ
@@ -21,22 +23,26 @@ def word_tag(tag):
 def clean_entry(entry):
 	entry = entry.lower()
 	entry = word_tokenize(entry)
-	list_words = list()
-	for word in entry:
-		list_words.append(stemmer.stem(word))
-	entry = ' '.join(list_words)
+	list_words = tagger.tag(entry)
+	entry = list()
+	for tup in list_words:
+		word = tup[0]
+		tag = word_tag(tup[1])
+		if tag!='':
+			entry.append(lemmatizer.lemmatize(word,tag))
+	entry = ' '.join(entry)
 	entry = re.sub("[^\w]", " ",  entry).split()
 	entry = ' '.join(entry)
 	return entry
 
 
 def main():
-	global prd_entry,stopwords,lemmatizer,stemmer
+	global prd_entry,stopwords,lemmatizer,stemmer,tagger
+	tagger = PerceptronTagger()
+	lemmatizer = WordNetLemmatizer()
 	data = pandas.read_csv('data.csv')
 	stopwords = set(corpus.stopwords.words('english'))
 	stemmer = SnowballStemmer('english')
-	#data_subset = data[['product_uid','product_title','product_description']]
-	#data_subset = data_subset.drop_duplicates()
 	data['product_title'] = data['product_title'].map(lambda x:clean_entry(x))
 	data['product_title'] = data['product_title'].map(lambda x: set(word_tokenize(x)) - stopwords).map(lambda l:' '.join(l))
 
@@ -46,15 +52,9 @@ def main():
 	data['search_term'] = data['search_term'].map(lambda x:clean_entry(x))
 	data['search_term'] = data['search_term'].map(lambda x: set(word_tokenize(x)) - stopwords).map(lambda l:' '.join(l))
 
-	print data['product_title'][0]
-	print data['product_description'][0]
-	print data['search_term'][0]
-
-	#data_subset['product_title'].apply(clean_entry)
-	#data_subset['product_description'].apply(clean_entry)
+	data = data.dropna()
 	data.to_csv('clean_data.csv')
 	
-
 
 if __name__ == "__main__":
     main()
