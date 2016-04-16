@@ -1,6 +1,4 @@
 import sys
-import collections
-import nltk
 import operator
 import numpy as np
 
