@@ -41,7 +41,7 @@ def extract_features(v_data):
 	
 	#data_features = data_features.drop(['search_term','product_title','product_description','title_search_term_match','desc_search_term_match','Unnamed: 0'],axis=1)
 	data_features = data_features.drop(['search_term','product_title','product_description','Unnamed: 0'],axis=1)
-	data_features.to_csv('data_features.csv')
+	data_features.to_csv('data_feature.csv')
 	return data_features
 	
 def main():
