@@ -2,9 +2,11 @@ import requests
 import sys
 import time
 from random import randint
+import pandas
 
 # take arg as the entire search_term column
-search_term = sys.argv[1]
+data = pandas.read_csv('data.csv')
+search_term = data['search_term']
 
 # gas mowe -> gas+mowe
 # the txed format is used in google search request
@@ -40,7 +42,7 @@ def spell_check(st):
     return search;
 
 # apply spell_check to split data
-search_term = search_term.apply(spell_check())
+search_term = search_term.apply(spell_check)
 
 # gas+mower -> gas mower
 def merge(a):
@@ -49,6 +51,8 @@ def merge(a):
 
 # apply merge to spell checked data
 search_term = search_term.apply(merge)
+
+data.to_csv('data.csv')
 
 # ignore below comments
 # used while working on cmd line
