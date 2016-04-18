@@ -25,30 +25,34 @@ def extract_features(v_data):
 			return 1
 		else:
 			return 0
-	
+
 	data_features['last_word_match'] = data_features.apply(lambda x: last_word_match(x) , axis = 1)
-	
+
 	# assuming most brand names are at the beginning of product title
 	def brand_name_match(x):
 		if x['product_title'][0] in x['search_term']:
 			return 1
 		else:
 			return 0
-	
+
 	# brand name match
 	data_features['brand_name_match'] = data_features.apply(lambda x: brand_name_match(x) , axis = 1)
-	
+
 	# ratio of the number of matches between product title and search term and the number of words in the search term
 	data_features['ratio_title']=data_features['title_search_term_match']/data_features['length_search_term']
-	
+
 	# ratio of the number of matches between product description and search term and the number of words in the search term
 	data_features['ratio_description']=data_features['desc_search_term_match']/data_features['length_search_term']
-	
+
 	# integrating vector space model features
 	vsm_data = pd.read_csv("vsm.csv", header = None)
-	data_features['vsm'] = vsm_data[1]	
-	
-	data_features = data_features.drop(['search_term','product_title','product_description'],axis=1)
+	data_features['vsm'] = vsm_data[1]
+
+	# integrating doc2vec model features
+	doc2vec_data = pd.read_csv("doc2vec_feature.csv", header = None)
+	data_features['doc2vec'] = doc2vec_data[1]
+
+	data_features = data_features.drop(['Unnamed: 0','Unnamed: 0.1','Unnamed: 0.1','id','index','search_term','product_title','product_description'],axis=1)
 	return data_features
 	
 def main():
