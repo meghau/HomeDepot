@@ -20,7 +20,7 @@ dictionary = corpora.Dictionary(line.lower().split() for line in desc)
 corpus = MyCorpus()
 tfidf = models.TfidfModel(corpus)
 
-query = [q.split(" ") for q in term]
+query = [str(q).split(" ") for q in term]
 desc = [d.split(" ") for d in desc]
 
 S = []
