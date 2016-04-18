@@ -9,9 +9,9 @@ train = pd.read_csv('data_train.csv')
 test = pd.read_csv('data_test.csv')
 
 y_train = train['relevance'].values
-X_train = train.drop(['id','relevance'],axis=1).values
+X_train = train.drop(['relevance'],axis=1).values
 y_test = test['relevance'].values
-X_test = test.drop(['id','relevance'],axis=1).values
+X_test = test.drop(['relevance'],axis=1).values
 
 # K-Nearest Neighbor
 
