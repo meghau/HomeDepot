@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+np.random.seed(50)
+
 def vectorize(data):
 	vectorized_dataset = data.copy(deep = True)
 	for col_name in ('product_title', 'product_description', 'search_term'):
@@ -33,12 +35,24 @@ def extract_features(v_data):
 		else:
 			return 0
 	
+	# brand name match
 	data_features['brand_name_match'] = data_features.apply(lambda x: brand_name_match(x) , axis = 1)
-	data_features = data_features.drop(['search_term','product_title','product_description', 'Unnamed: 0'],axis=1)
+	
+	# ratio of the number of matches between product title and search term and the number of words in the search term
+	data_features['ratio_title']=data_features['title_search_term_match']/data_features['length_search_term']
+	
+	# ratio of the number of matches between product description and search term and the number of words in the search term
+	data_features['ratio_description']=data_features['desc_search_term_match']/data_features['length_search_term']
+	
+	# integrating vector space model features
+	vsm_data = pd.read_csv("vsm.csv", header = None)
+	data_features['vsm'] = vsm_data[1]	
+	
+	data_features = data_features.drop(['search_term','product_title','product_description'],axis=1)
 	return data_features
 	
 def main():
-	dataset = pd.read_csv("data.csv")
+	dataset = pd.read_csv("clean_data.csv")
 	# not needed if already done: removing NA from Dataset
 	dataset = dataset.dropna()
 	vectorized_dataset = vectorize(dataset)
