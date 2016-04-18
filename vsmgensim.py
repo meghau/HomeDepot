@@ -28,10 +28,8 @@ for i in range(len(desc)):
 	S.append(similarities.MatrixSimilarity([tfidf[dictionary.doc2bow(desc[i])]],num_features=len(dictionary))[tfidf[dictionary.doc2bow(query[i])]])
 
 X = [s[0] for s in S]
-import code;code.interact(local=locals())
-with open("vsm.csv", "wb") as f:
-    writer = csv.writer(f, delimiter = ',')
-    writer.writerow(X)
+w = pd.Series(X)
+w.to_csv('vsm.csv')
 X = np.asarray(X)
 X = X.reshape((len(X), 1))
 model = SGDRegressor()
