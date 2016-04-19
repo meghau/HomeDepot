@@ -4,7 +4,7 @@ import random
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-data = pd.read_csv("/home/manish/ADGBI/Capstone/HomeDepot/clean_data.csv")
+data = pd.read_csv("clean_data.csv")
 #data = pd.read_csv("/home/manish/ADGBI/Capstone/HomeDepot/data.csv")
 
 
@@ -66,4 +66,4 @@ maxmin_val = df.max() - min_val
 for i in range(len(data)):
     df = df.set_value(i,(df[i]-min_val)/maxmin_val)
 
-df.to_csv("/home/manish/ADGBI/Capstone/HomeDepot/doc2vec_feature.csv")
+df.to_csv("doc2vec_feature.csv")
