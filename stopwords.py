@@ -6,7 +6,6 @@ import numpy as np
 def main():
     remove_jointwords("SunRise HomeWork")
     
-
 def remove_jointwords(desc):
 	clean_list=[]
  	for s in desc.split(" "):
