@@ -17,7 +17,6 @@ X_test = test.drop(['relevance'],axis=1).values
 
 knr=KNeighborsRegressor(n_neighbors=500)
 #0.5269
-
 knr.fit(X_train, y_train)
 y_pred = knr.predict(X_test)
 

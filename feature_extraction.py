@@ -3,6 +3,7 @@ import numpy as np
 
 np.random.seed(50)
 
+# to convert each column into a vector of words
 def vectorize(data):
 	vectorized_dataset = data.copy(deep = True)
 	for col_name in ('product_title', 'product_description', 'search_term'):
@@ -28,7 +29,7 @@ def extract_features(v_data):
 
 	data_features['last_word_match'] = data_features.apply(lambda x: last_word_match(x) , axis = 1)
 
-	# assuming most brand names are at the beginning of product title
+	# assuming brand names are at the beginning of product title for some products
 	def brand_name_match(x):
 		if x['product_title'][0] in x['search_term']:
 			return 1
@@ -57,15 +58,18 @@ def extract_features(v_data):
 	
 def main():
 	dataset = pd.read_csv("clean_data.csv")
-	# not needed if already done: removing NA from Dataset
-	dataset = dataset.dropna()
+	# removing NA from Dataset
+	# dataset = dataset.dropna()
+	
 	vectorized_dataset = vectorize(dataset)
 	featurized_dataset = extract_features(vectorized_dataset)
-
+	
+	# dividing the dataset into train and test
 	index = np.random.rand(len(dataset)) < 0.7
 	train = featurized_dataset[index]
 	test = featurized_dataset[~index]
 
+	# storing as csv
 	train.to_csv('data_train.csv',index=False)
 	test.to_csv('data_test.csv',index=False)
 	

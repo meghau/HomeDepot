@@ -34,12 +34,10 @@ def extract_features(v_data):
 			return 0
 	
 	data_features['brand_name_match'] = data_features.apply(lambda x: brand_name_match(x) , axis = 1)
-	
+	#number of matching search words and product title
 	data_features['ratio_title']=data_features['title_search_term_match']/data_features['length_search_term']
+	#number of matching search words and product description
 	data_features['ratio_description']=data_features['desc_search_term_match']/data_features['length_search_term']
-	#data_features['ratio_brand']=data_features['brand_name_match']/data_features['length_search_term']
-	
-	#data_features = data_features.drop(['search_term','product_title','product_description','title_search_term_match','desc_search_term_match','Unnamed: 0'],axis=1)
 	data_features = data_features.drop(['search_term','product_title','product_description','Unnamed: 0'],axis=1)
 	data_features.to_csv('data_feature.csv')
 	return data_features
@@ -50,7 +48,7 @@ def main():
 	dataset = dataset.dropna()
 	vectorized_dataset = vectorize(dataset)
 	featurized_dataset = extract_features(vectorized_dataset)
-
+	#dividing the data into test and train
 	index = np.random.rand(len(dataset)) < 0.7
 	train = featurized_dataset[index]
 	test = featurized_dataset[~index]
