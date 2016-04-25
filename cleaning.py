@@ -8,9 +8,9 @@ import requests
 import sys
 import time
 from random import randint
+download("stopwords")
 
-#download("stopwords")
-
+#removes jointwords
 def remove_jointwords(word):
 	clean_list=[]
  	for s in word.split(" "):
@@ -23,6 +23,7 @@ def remove_jointwords(word):
 	str1 = ' '.join(flattened_list)
 	return str1
 
+#POS tagging of the words
 def word_tag(tag):
 	if tag.startswith('J'):
 		return wordnet.ADJ
@@ -35,9 +36,10 @@ def word_tag(tag):
 	else:
 		return ''
 
-
+#cleans the data
 def clean_entry(entry):
 	entry = remove_jointwords(entry)
+	#changes to lowercase
 	entry = entry.lower()
 	entry = word_tokenize(entry)
 	list_words = tagger.tag(entry)
@@ -60,9 +62,10 @@ def main():
 	tagger = PerceptronTagger()
 	lemmatizer = WordNetLemmatizer()
 	data = pandas.read_csv('data.csv')
+	#removes stopwords
 	stopwords = set(corpus.stopwords.words('english'))
-	#stemmer = SnowballStemmer('english')
 
+	#reads data from data.csv
 	data['product_title'] = data['product_title'].map(lambda x:clean_entry(x))
 	data['product_title'] = data['product_title'].map(lambda x: set(word_tokenize(x)) - stopwords).map(lambda l:' '.join(l))
 
@@ -73,6 +76,8 @@ def main():
 	data['search_term'] = data['search_term'].map(lambda x: set(word_tokenize(x)) - stopwords).map(lambda l:' '.join(l))
 
 	data = data.dropna()
+
+	#writes the data to new csv file
 	data.to_csv('clean_data.csv')
 	
 
