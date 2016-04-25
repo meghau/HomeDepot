@@ -5,9 +5,6 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 data = pd.read_csv("clean_data.csv")
-#data = pd.read_csv("/home/manish/ADGBI/Capstone/HomeDepot/data.csv")
-
-
 
 data_pd = data['product_description']
 data_st = data['search_term']
